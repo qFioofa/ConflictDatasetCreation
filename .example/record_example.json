@@ -1,0 +1,16 @@
+{
+    "instruction": "",
+    "input": "",
+    "output": "",
+    "conflict_info": {
+        "situation": "",
+        "conflict_type": "",
+        "attack": "",
+        "defence": "",
+        "is_public": false
+    },
+    "context": [],
+    "is_valid": true,
+    "quality_score": 0.9,
+    "metadata": {}
+}
