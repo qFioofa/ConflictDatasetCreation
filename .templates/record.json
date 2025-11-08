@@ -5,12 +5,22 @@
     "conflict_info": {
         "situation": "",
         "conflict_type": "",
-        "attack": "",
-        "defence": "",
-        "is_public": false
+        "attack": {
+            "name": "",
+            "formal_role": ""
+        },
+        "defence": {
+            "name": "",
+            "formal_role": ""
+        },
+        "is_public": false,
+        "negotiation_subject": "",
+        "attack_trigger": []
     },
     "context": [],
     "is_valid": true,
     "quality_score": 0.9,
-    "metadata": {}
+    "metadata": {
+        "industry": ""
+    }
 }
