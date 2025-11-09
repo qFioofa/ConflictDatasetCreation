@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 MD_PATH : str = "../prompts/md/"
