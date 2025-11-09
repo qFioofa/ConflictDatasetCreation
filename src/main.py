@@ -3,6 +3,9 @@ import json
 from src.parameters import dec_init_parameters, PARAMETERS
 
 SCHEME: dict | None = None
+INTRUCTION: str | None = None
+
+INTRUCTION_DEFAULT : str = "Придумай конфликтную ситуацию"
 
 def read_json(filename: str) -> dict | None:
     output: dict | None = None
@@ -47,6 +50,22 @@ def record_check(record: dict) -> bool:
 
     return _check_structure(record, SCHEME)
 
+def instruction_insertion(record : dict, instruction_field : str = "instruction") -> dict:
+    global INTRUCTION, INTRUCTION_DEFAULT, PARAMETERS
+
+    if INTRUCTION is None:
+        filename : str = PARAMETERS['INSTRACTION_FILE']
+        try:
+            with open(file=filename, mode="r", encoding="utf-8") as file:
+                INTRUCTION: str = file.read()
+        except Exception:
+            print("Instruction is not loaded...\nInserting default instruction...\n")
+            INTRUCTION = INTRUCTION_DEFAULT
+
+    record[instruction_field] = INTRUCTION
+
+    return record
+
 def read_files_from_folder(folder: str) -> list[str]:
     try:
         files: list[str] = os.listdir(folder)
@@ -90,7 +109,8 @@ def main() -> None:
                     print(f"Record: {record_instance}\nDoes not match with scheme")
                     continue
 
-                valid_records.append(record_instance)
+                record_instance_full: dict = instruction_insertion(record_instance)
+                valid_records.append(record_instance_full)
 
         dataset_name : str = PARAMETERS['OUTPUTFILE']
         create_dataset(valid_records, dataset_name)
