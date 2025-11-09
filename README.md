@@ -11,8 +11,8 @@
 Использовать `Thinking`, если модель поддерживает этот функционал
 
 2. Создает 2 чата:
-- Генерация ситуаций - [промтп](./promts/txt/generate_conflict.txt)
-- Преобразование в record - [промтп](./promts/txt/to_record.txt)
+- Генерация ситуаций - [промтп](./prompts/txt/generate_conflict.txt)
+- Преобразование в record - [промтп](./prompts/txt/to_record.txt)
 
 **Note:**
 record - единичная записиь в датасете
