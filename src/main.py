@@ -1,6 +1,6 @@
 import os
 import json
-from src.parameters import dec_init_parameters, PARAMETERS
+from parameters import dec_init_parameters, PARAMETERS
 
 SCHEME: dict | None = None
 INTRUCTION: str | None = None
@@ -57,7 +57,7 @@ def instruction_insertion(record : dict, instruction_field : str = "instruction"
         filename : str = PARAMETERS['INSTRACTION_FILE']
         try:
             with open(file=filename, mode="r", encoding="utf-8") as file:
-                INTRUCTION: str = file.read()
+                INTRUCTION = file.read()
         except Exception:
             print("Instruction is not loaded...\nInserting default instruction...\n")
             INTRUCTION = INTRUCTION_DEFAULT
@@ -114,6 +114,7 @@ def main() -> None:
 
         dataset_name : str = PARAMETERS['OUTPUTFILE']
         create_dataset(valid_records, dataset_name)
+        print("Dataset has been created")
     except Exception as e:
         print(e)
 
