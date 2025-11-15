@@ -93,3 +93,23 @@ python3 main.py
 [Prompt](./prompts/md/generate_context.md)
 
 Создаёт 10 разных контекстов для генерации ситуаций
+
+# Auto generator
+
+Автоматически создает ситуации через Hugging face endpoints
+
+1. Переходим в папку `src`
+```bash
+cd src
+```
+
+2. Запускаем [main](./auto_generator/main.py) файл через Python
+```bash
+python3 main.py
+```
+
+3. На выходе получается 2 типа файла:
+
+conflict_situations_XX_XX_XX_XX.json - готовый оформленная часть датасета
+plaint_records_XX_XX_XX_XX.json - записи, которые не смогли быть преобразованы под [формат](./.templates/record.json)
+

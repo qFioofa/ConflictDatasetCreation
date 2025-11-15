@@ -6,10 +6,12 @@ from typing import Final
 from httpx import Response, post
 
 MAX_SEED_VALUE: Final[int] = 2**32 - 1
-USER_CHAT_TEXT : Final[str] = """
-    Сгеренируй, что требуется в системном промпте.
-    Запрещено повторять предыдущие ситуации.
-"""
+USER_CHAT_TEXT : Final[list[str]] = [
+    "Сгеренируй, что требуется в системном промпте. Запрещено повторять предыдущие ситуации.",
+    "Сгеренируй семейный конфликт. Запрещено повторять предыдущие ситуации.",
+    "Сгеренируй деловой конфликт. Запрещено повторять предыдущие ситуации.",
+    "Сгеренируй дружественный конфликт. Запрещено повторять предыдущие ситуации.",
+]
 _NO_GENERATION_ERROR : Final[str] = "Response result doesn't contain generated text"
 
 class nAiChatRoles(Enum):
@@ -60,8 +62,6 @@ class nAi:
 
         _result : dict = response.json()
 
-        print(_result)
-
         if _result.get("error"):
             raise RuntimeError(_result.get("error"))
         if not _result.get("choices"):
@@ -109,7 +109,7 @@ class nAi:
 
         _user_message : dict[str, str] = {
             "role" : nAiChatRoles.USER.value,
-            "content" : USER_CHAT_TEXT
+            "content" : USER_CHAT_TEXT[random.randint(0, len(USER_CHAT_TEXT))]
         }
 
         _assistent_message : dict[str, str] = {

@@ -1,5 +1,5 @@
-import json
 import re
+import json
 import copy
 import random
 from nAi import nAi
@@ -7,7 +7,7 @@ from parameters import init_parameters, PARAMETERS
 
 init_parameters()
 
-NUM_REQUESTS : int = 1
+NUM_REQUESTS : int = 300
 
 AI : nAi = nAi(
     PARAMETERS['AI_MODEL'],
@@ -34,6 +34,12 @@ PROMPT : str = " ".join([
 
 HISTORY : list = []
 
+RECORD_SCHEME : dict = json.loads(
+    open(PARAMETERS['RECORD_SCHEME'], "r", encoding="utf-8").read()
+)
+
+def rand_2digit() -> int:
+    return random.randint(10,99)
 
 def create_dataset(data: list[dict], filename: str, format: str = "json") -> None:
     if format == "json":
@@ -41,40 +47,76 @@ def create_dataset(data: list[dict], filename: str, format: str = "json") -> Non
             json.dump(data, file, ensure_ascii=False, indent=4)
     else:
         raise ValueError(f"Unsupported format: {format}")
-    
-def fromat_to_dict(content : str) -> dict:
-    
-    raise Exception("Can't format to dict")
+
+def format_to_dict(content: str) -> dict:
+    output: dict = copy.deepcopy(RECORD_SCHEME)
+
+    for char in ["`", "json", "txt", "\n"]:
+        content = content.replace(char, "")
+
+    data = json.loads(content)
+
+    output['input'] = data['input']
+    output['output'] = data['output']
+
+    output['conflict_info']['situation'] = data['conflict_info']['situation']
+    output['conflict_info']['conflict_type'] = data['conflict_info']['conflict_type']
+
+    output['conflict_info']['attack']['name'] = data['conflict_info']['attack']['name']
+    output['conflict_info']['attack']['formal_role'] = data['conflict_info']['attack']['formal_role']
+
+    output['conflict_info']['defence']['name'] = data['conflict_info']['defence']['name']
+    output['conflict_info']['defence']['formal_role'] = data['conflict_info']['defence']['formal_role']
+
+    output['conflict_info']['is_public'] = data['conflict_info']['is_public']
+    output['conflict_info']['negotiation_subject'] = data['conflict_info']['negotiation_subject']
+    output['conflict_info']['attack_trigger'] = data['conflict_info']['attack_trigger']
+
+    output['context'] = data['context']
+    output['quality_score'] = data['quality_score']
+    output['metadata']['industry'] = data['metadata']['industry']
+
+    return output
 
 def main() -> None:
     records : list[dict] = list()
-
     plaint_records : list[dict] = list()
 
     for _ in range(NUM_REQUESTS):
-        response = AI.generate(
-            PROMPT,
-            HISTORY
-        )
+
+        print("Отпавка запроса...")
 
         try:
-            response = fromat_to_dict(response)
-            print(f"ЧИСЛО ГЕНЕРАЦИЙ: {_}\n\n")
-            print(response)
+            response = AI.generate(
+                PROMPT,
+                HISTORY
+            )
 
-            records.append(response)
+            try:
+                response = format_to_dict(response)
+                print(f"ЧИСЛО ГЕНЕРАЦИЙ: {_}\n\n")
+
+                records.append(response)
+            except Exception as e:
+                print(f"{e}\n\n")
+                print(f"ERROR: \n {response} \n")
+
+                plaint_records.append({
+                    "record" : response
+                })
         except Exception as e:
-            print(f"{e}\n\n")
-            print(f"ERROR: {response} \n")
+            print(f"Ошибка получения запроса:\n {e}")
 
-            plaint_records.append({
-                "record" : response
-            })
+    serios : str = f"{rand_2digit()}_{rand_2digit()}_{rand_2digit()}_{rand_2digit()}"
 
-    create_dataset(records, f"conflict_situations_{random.randint(10,99)}_{random.randint(10,99)}_{random.randint(10,99)}_{random.randint(10,99)}")
+    if len(records) > 0:
+        create_dataset(records, f"conflict_situations_{serios}.json")
 
     if len(plaint_records) > 0:
-        create_dataset(plaint_records, f"plaint_records.json")
+        create_dataset(plaint_records, f"plaint_records_{serios}.json")
+
+    print("Генерация завершена")
+    print(f"Статистика:\n Кол-во записей: {len(records)}\n Кол-во не обработанных записей: {len(plaint_records)}")
 
 if __name__ == "__main__":
     main()

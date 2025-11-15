@@ -1,18 +1,18 @@
 {
     "model": "",
     "messages": [],
-    "temperature": 0.8,
+    "temperature": 0.85,
     "top_p": 0.95,
-    "max_tokens": 512,
+    "max_tokens": 1024,
     "stop": [],
     "stream": false,
-    "presence_penalty": 0.3,
-    "frequency_penalty": 0.3,
+    "presence_penalty": 0.4,
+    "frequency_penalty": 0.4,
     "logit_bias": {},
     "user": "conflict_generator_v1",
     "tools": [],
     "tool_choice": "auto",
     "response_format": {
-        "type": "json"
+        "type": "text"
     }
 }
